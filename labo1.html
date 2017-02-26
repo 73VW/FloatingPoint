@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Floating Point - Labo 1</title>
+  <style media="screen">
+  table {
+    font-family: arial, sans-serif;
+    /*border-collapse: collapse;*/
+    width: 80%;
+    margin: auto;
+  }
+
+  td, th {
+    border: 1px solid #dddddd;
+    padding: 15px;
+  }
+
+  .content {
+    text-align: center;
+  }
+  </style>
+  <script src="labo1.js"></script>
+</head>
+<body onload="exponentCheckbox();">
+  <table>
+    <th></th>
+    <th>Sign</th>
+    <th>Exponent</th>
+    <th>Mantissa</th>
+    <tr>
+      <td>Vaule:</td>
+      <td class="content"></td>
+      <td class="content"></td>
+      <td class="content"></td>
+    </tr>
+    <tr>
+      <td>Encoded as:</td>
+      <td class="content"></td>
+      <td class="content"></td>
+      <td class="content"></td>
+    </tr>
+    <tr>
+      <td>Binary:</td>
+      <td class="content"><input type="checkbox" name="signCheckbox" value="1" /></td>
+      <td id="binaryExponent" class="content"></td>
+      <td class="content"></td>
+    </tr>
+  </table>
+    <p>
+      <label for="nbBits">Number of bits: </label>
+      <input type="text" name="nbBits" value="32" onchange="exponentCheckbox();" />
+    </p>
+</body>
+</html>
