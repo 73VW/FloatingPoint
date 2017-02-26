@@ -19,10 +19,19 @@
   .content {
     text-align: center;
   }
+
+  .form {
+    padding: 1em;
+    text-align: center;
+  }
+
+  .form p {
+    display: block;
+  }
   </style>
   <script src="labo1.js"></script>
 </head>
-<body onload="exponentCheckbox();">
+<body onload="onLoad();">
   <table>
     <th></th>
     <th>Sign</th>
@@ -44,12 +53,23 @@
       <td>Binary:</td>
       <td class="content"><input type="checkbox" name="signCheckbox" value="1" /></td>
       <td id="binaryExponent" class="content"></td>
-      <td class="content"></td>
+      <td id="binaryMantissa" class="content"></td>
     </tr>
   </table>
-    <p>
-      <label for="nbBits">Number of bits: </label>
-      <input type="text" name="nbBits" value="32" onchange="exponentCheckbox();" />
-    </p>
+
+    <div class="form">
+      <p>
+        <label for="nbBits">Number of bits (&isin;[12, 128]) </label>
+        <input type="number" name="nbBits" value="32" onchange="checkboxChange();" min="12" max="128"/>
+      </p>
+      <p>
+        <label for="decimal">Decimal representation </label>
+        <input type="text" name="decimal" value="0.0">
+      </p>
+      <p>
+        <label for="binary">Binary representation </label>
+        <input type="text" name="binary" value="0">
+      </p>
+    </div>
 </body>
 </html>
