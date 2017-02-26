@@ -1,34 +1,6 @@
 function onLoad() {
   checkboxChange();
-}
-
-// Cette fonction permet d'ajouter dynamiquement les checkbox de l'exposant
-function exponentCheckbox() {
-  var exponentList = document.getElementById('binaryExponent');
-  while (exponentList.firstChild) {
-    exponentList.removeChild(exponentList.firstChild);
-  }
-
-  var nbBits = document.getElementsByName('nbBits')[0].value;
-  var exponentSize;
-
-  // Cf. page wiki anglaise de la norme IEEE754, section "interchange formats"
-  if (nbBits == 16) {
-    exponentSize = 5;
-  } else if (nbBits == 32) {
-    exponentSize = 8;
-  } else {
-    exponentSize = Math.round(4 * Math.log(nbBits) / Math.log(2) - 13);
-  }
-
-  for (var i = 0; i < exponentSize; i++) {
-    var checkbox = document.createElement('input');
-    checkbox.type = "checkbox";
-    checkbox.name = "exponentCheckbox";
-    checkbox.value = "1";
-
-    document.getElementById('binaryExponent').appendChild(checkbox);
-  }
+  updateSign();
 }
 
 // Supprime toutes les checkbox de l'id donné
@@ -39,6 +11,7 @@ function clearCheckbox(id) {
   }
 }
 
+// Créer 'size' checkbox à la position 'id', avec le nom 'name'
 function createCheckbox(id, name, size) {
   for (var i = 0; i < size; i++) {
     var checkbox = document.createElement('input');
@@ -51,6 +24,7 @@ function createCheckbox(id, name, size) {
   }
 }
 
+// Cette fonction permet d'ajouter dynamiquement les checkbox de l'exposant
 function checkboxChange() {
   clearCheckbox("binaryExponent");
   clearCheckbox("binaryMantissa");
@@ -74,5 +48,13 @@ function checkboxChange() {
 }
 
 function updateSign() {
-  
+  var checkbox = document.getElementsByName("signCheckbox")[0];
+
+  if (checkbox.checked) {
+    document.getElementById('valueSign').innerHTML = "-1";
+    document.getElementById('encodeSign').innerHTML = "1";
+  } else {
+    document.getElementById('valueSign').innerHTML = "+1";
+    document.getElementById('encodeSign').innerHTML = "0";
+  }
 }

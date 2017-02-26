@@ -39,19 +39,19 @@
     <th>Mantissa</th>
     <tr>
       <td>Vaule:</td>
-      <td class="content"></td>
-      <td class="content"></td>
-      <td class="content"></td>
+      <td id="valueSign" class="content"></td>
+      <td class="content"><section id="valueExponent"></td>
+      <td id="valueMantissa" class="content"></td>
     </tr>
     <tr>
       <td>Encoded as:</td>
-      <td class="content"></td>
-      <td class="content"></td>
-      <td class="content"></td>
+      <td id="encodeSign" class="content"></td>
+      <td id="encodeExponent" class="content"></td>
+      <td id="encodeMantissa" class="content"></td>
     </tr>
     <tr>
       <td>Binary:</td>
-      <td class="content"><input type="checkbox" name="signCheckbox" value="1" /></td>
+      <td class="content"><input type="checkbox" name="signCheckbox" value="0" onclick="updateSign();"/></td>
       <td id="binaryExponent" class="content"></td>
       <td id="binaryMantissa" class="content"></td>
     </tr>
