@@ -1,6 +1,7 @@
 function onLoad() {
-  checkboxChange();
+  updateNbBits();
   updateSign();
+  updateExponent();
 }
 
 // Supprime toutes les checkbox de l'id donné
@@ -18,18 +19,14 @@ function createCheckbox(id, name, size) {
     checkbox.type = "checkbox";
     checkbox.name = name;
     checkbox.value = "1";
+    checkbox.onclick = function(){ updateExponent(); };
 
     document.getElementById(id).appendChild(checkbox);
 
   }
 }
 
-// Cette fonction permet d'ajouter dynamiquement les checkbox de l'exposant
-function checkboxChange() {
-  clearCheckbox("binaryExponent");
-  clearCheckbox("binaryMantissa");
-
-  var nbBits = document.getElementsByName('nbBits')[0].value;
+function getExponentSize(nbBits) {
   var exponentSize;
 
   // Cf. page wiki anglaise de la norme IEEE754, section "interchange formats"
@@ -40,7 +37,16 @@ function checkboxChange() {
   } else {
     exponentSize = Math.round(4 * Math.log(nbBits) / Math.log(2) - 13);
   }
+  return exponentSize;
+}
 
+// Cette fonction permet d'ajouter dynamiquement les checkbox de l'exposant
+function updateNbBits() {
+  clearCheckbox("binaryExponent");
+  clearCheckbox("binaryMantissa");
+
+  var nbBits = document.getElementsByName('nbBits')[0].value;
+  var exponentSize = getExponentSize(nbBits);
   var mantissaSize = nbBits - exponentSize - 1;
 
   createCheckbox("binaryExponent", "exponentCheckbox", exponentSize);
@@ -57,4 +63,23 @@ function updateSign() {
     document.getElementById('valueSign').innerHTML = "+1";
     document.getElementById('encodeSign').innerHTML = "0";
   }
+}
+
+function updateExponent() {
+  var nbBits = document.getElementsByName('nbBits')[0].value;
+  var exponentSize = getExponentSize(nbBits);
+  var shift = Math.pow(2, (exponentSize - 1)) - 1;
+  var exponant = 0;
+  var checkboxList = document.getElementsByName('exponentCheckbox');
+
+  for (var i = 0; i < checkboxList.length; i++) {
+    if (checkboxList[i].checked) {
+      exponant += Math.pow(2, checkboxList.length-1 - i);
+    }
+  }
+
+  var sup = exponant - shift;
+
+  document.getElementById('valueExponent').innerHTML = "2<sup>" + sup + "</sup>";
+  document.getElementById('encodeExponent').innerHTML = exponant;
 }
