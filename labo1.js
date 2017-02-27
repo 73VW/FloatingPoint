@@ -1,3 +1,31 @@
+var float = {
+  nbBits: 32,
+
+  valueSign: "+1",
+  encodeSign: 0,
+  sign: -2 * this.encodeSign + 1,
+
+  valueExponent: -127,
+  encodeExponent: 0,
+  exponentSize: 8,
+  getExponentSize: function() {
+    // Cf. page wiki anglaise de la norme IEEE754, section "interchange formats"
+    if (this.nbBits == 16) {
+      return 5;
+    } else if (this.nbBits == 32) {
+      return 8;
+    }
+    return Math.round(4 * Math.log(this.nbBits) / Math.log(2) - 13);
+  },
+
+  valueMantissa: 1,
+  encodeMantissa: 0,
+  mantissaSize: 23,
+
+  shift: Math.pow(2, (this.exponentSize - 1)) - 1,
+  sup: this.encodeExponent - this.shift
+};
+
 // Initialise l'application avec ses valeurs par défaut
 function onLoad() {
   updateNbBits();
@@ -40,31 +68,21 @@ function createCheckbox(id, name, size) {
 }
 
 // Retourne la taille de l'exposant en nombre de bits
-function getExponentSize(nbBits) {
-  var exponentSize;
 
-  // Cf. page wiki anglaise de la norme IEEE754, section "interchange formats"
-  if (nbBits == 16) {
-    exponentSize = 5;
-  } else if (nbBits == 32) {
-    exponentSize = 8;
-  } else {
-    exponentSize = Math.round(4 * Math.log(nbBits) / Math.log(2) - 13);
-  }
-  return exponentSize;
-}
 
 // Permet d'ajouter/supprimer dynamiquement les checkbox de l'exposant en fonction du nombre de bits choisi.
 function updateNbBits() {
   clearCheckbox("binaryExponent");
   clearCheckbox("binaryMantissa");
 
-  var nbBits = document.getElementsByName('nbBits')[0].value;
-  var exponentSize = getExponentSize(nbBits);
-  var mantissaSize = nbBits - exponentSize - 1;
+  float.nbBits = document.getElementsByName('nbBits')[0].value;
+  float.exponentSize = float.getExponentSize();
+  float.mantissaSize = float.nbBits - float.exponentSize - 1;
+  float.shift = Math.pow(2, (float.exponentSize - 1)) - 1;
+  float.sup = float.encodeExponent - float.shift;
 
-  createCheckbox("binaryExponent", "exponentCheckbox", exponentSize);
-  createCheckbox("binaryMantissa", "mantissaCheckbox", mantissaSize);
+  createCheckbox("binaryExponent", "exponentCheckbox", float.exponentSize);
+  createCheckbox("binaryMantissa", "mantissaCheckbox", float.mantissaSize);
 }
 
 // Met à jour dynamiquement la valeur du signe, quand sa checkbox est chochée/décochée
@@ -72,12 +90,17 @@ function updateSign() {
   var checkbox = document.getElementsByName("signCheckbox")[0];
 
   if (checkbox.checked) {
-    document.getElementById('valueSign').innerHTML = "-1";
-    document.getElementById('encodeSign').innerHTML = "1";
+    float.valueSign = "-1";
+    float.encodeSign = 1;
   } else {
-    document.getElementById('valueSign').innerHTML = "+1";
-    document.getElementById('encodeSign').innerHTML = "0";
+    float.valueSign = "+1";
+    float.encodeSign = 0;
   }
+
+  float.sign = -2 * float.encodeSign + 1;
+
+  document.getElementById('valueSign').innerHTML = float.valueSign;
+  document.getElementById('encodeSign').innerHTML = float.encodeSign;
 }
 
 // Retourne une valeur décimale qui varie en fonction des checkbox cochées/décochées
@@ -93,52 +116,37 @@ function getBinaryValue(checkboxList) {
 
 // Met à jour dynamiquement la veuleur de l'exposant en fonction des checkbox cochées/décochées
 function updateExponent() {
-  var nbBits = document.getElementsByName('nbBits')[0].value;
-  var exponentSize = getExponentSize(nbBits);
+  float.encodeExponent = getBinaryValue(document.getElementsByName('exponentCheckbox'));
+  float.sup = float.encodeExponent - float.shift;
 
-  var shift = Math.pow(2, (exponentSize - 1)) - 1;
-  var exponant = getBinaryValue(document.getElementsByName('exponentCheckbox'));
-  var sup = exponant - shift;
-
-  if (exponant == 0) {
-    document.getElementById('valueExponent').innerHTML = "2<sup id='sup'>" + sup + "</sup>" + "(denormalized)";
+  if (float.encodeExponent == 0) {
+    document.getElementById('valueExponent').innerHTML = "2<sup id='sup'>" + float.sup + "</sup>" + "(denormalized)";
   } else {
-    document.getElementById('valueExponent').innerHTML = "2<sup id='sup'>" + sup + "</sup>";
+    document.getElementById('valueExponent').innerHTML = "2<sup id='sup'>" + float.sup + "</sup>";
   }
 
-  document.getElementById('encodeExponent').innerHTML = exponant;
+  document.getElementById('encodeExponent').innerHTML = float.encodeExponent;
 }
 
 // Met à jour dynamiquement la valeur de la mantisse en fonction des checkbox cochées/décochées
 function updateMantissa() {
-  var nbBits = document.getElementsByName('nbBits')[0].value;
-  var exponentSize = getExponentSize(nbBits);
-  var mantissaSize = nbBits - exponentSize;
-
-  var mantissa = getBinaryValue(document.getElementsByName('mantissaCheckbox'));
-  var hiddenBit = Math.pow(2, mantissaSize-1);
-  document.getElementById('valueMantissa').innerHTML = (mantissa + hiddenBit) / hiddenBit;
-  document.getElementById('encodeMantissa').innerHTML = mantissa;
+  float.encodeMantissa = getBinaryValue(document.getElementsByName('mantissaCheckbox'));
+  var hiddenBit = Math.pow(2, float.mantissaSize);
+  float.valueMantissa = (float.encodeMantissa + hiddenBit) / hiddenBit;
+  document.getElementById('valueMantissa').innerHTML = float.valueMantissa;
+  document.getElementById('encodeMantissa').innerHTML = float.encodeMantissa;
 }
 
 function updateDecimal() {
-  var nbBits = document.getElementsByName('nbBits')[0].value;
-  var exponentSize = getExponentSize(nbBits);
-  var sign = -2 * document.getElementById('encodeSign').innerHTML + 1;
-  var exponant = Math.pow(2, document.getElementById('sup').innerHTML);
-  var mantissa = document.getElementById('valueMantissa').innerHTML;
-  var encodeExponent = document.getElementById('encodeExponent').innerHTML;
-  var encodeMantissa = document.getElementById('encodeMantissa').innerHTML;
-
-  if (encodeExponent == 0 && encodeMantissa == 0) {
+  if (float.encodeExponent == 0 && float.encodeMantissa == 0) {
     document.getElementsByName('decimal')[0].value = 0;
-  } else if (encodeExponent == 0 && encodeMantissa != 0) {
+  } else if (float.encodeExponent == 0 && float.encodeMantissa != 0) {
     document.getElementsByName('decimal')[0].value = "denormalized";
-  } else if (encodeExponent == Math.pow(2, exponentSize) - 1 && encodeMantissa == 0) {
+  } else if (float.encodeExponent == Math.pow(2, float.exponentSize) - 1 && float.encodeMantissa == 0) {
     document.getElementsByName('decimal')[0].value = "infinity";
-  } else if (encodeExponent == Math.pow(2, exponentSize) - 1 && encodeMantissa != 0) {
+  } else if (float.encodeExponent == Math.pow(2, float.exponentSize) - 1 && float.encodeMantissa != 0) {
     document.getElementsByName('decimal')[0].value = "NaN";
   } else {
-    document.getElementsByName('decimal')[0].value = sign * exponant * mantissa;
+    document.getElementsByName('decimal')[0].value = float.sign * Math.pow(2, float.sup) * float.valueMantissa;
   }
 }
