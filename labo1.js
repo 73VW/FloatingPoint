@@ -197,6 +197,7 @@ function updateFromDecimal() {
   updateSignFromDecimal();
   updateExponentFromDecimal();
   updateMantissaFromDecimal();
+  updateBinary();
 }
 
 // Met à jour la colonne Sign du tableau lors d'un  changement de signe dans décimal.
@@ -208,7 +209,6 @@ function updateSignFromDecimal() {
     signCheckbox.checked = false;
   }
   updateSign();
-  updateBinary();
 }
 
 // Retourne la valeur décimale entrée, sans prendre compte du signe
@@ -260,7 +260,6 @@ function updateExponentFromDecimal() {
 
   updateCheckboxFromDecimal(checkboxList, "exponent");
   updateExponent();
-  updateBinary();
 }
 
 // Met à jour la colonne Mantissa du tableau en fonction de la valeur décimale entrée
@@ -276,5 +275,4 @@ function updateMantissaFromDecimal() {
   var checkboxList = document.getElementsByName('mantissaCheckbox');
   updateCheckboxFromDecimal(checkboxList, "mantissa");
   updateMantissa();
-  updateBinary();
 }
