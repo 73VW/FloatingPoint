@@ -33,7 +33,12 @@ function onLoad() {
   updateExponent();
   updateMantissa();
   updateDecimal();
+  updateBinary();
 }
+
+/**************************************************/
+/*    Mise à jour dynamique depuis le tableau     */
+/**************************************************/
 
 // Supprime toutes les checkbox de l'id donné
 function clearCheckbox(id) {
@@ -55,11 +60,13 @@ function createCheckbox(id, name, size) {
       checkbox.onclick = function() {
         updateExponent();
         updateDecimal();
+        updateBinary();
       };
     } else {
       checkbox.onclick = function() {
         updateMantissa();
         updateDecimal();
+        updateBinary();
       };
     }
 
@@ -104,7 +111,7 @@ function updateSign() {
 }
 
 // Retourne une valeur décimale qui varie en fonction des checkbox cochées/décochées
-function getBinaryValue(checkboxList) {
+function getDecimalValue(checkboxList) {
   var binaryValue = 0;
   for (var i = 0; i < checkboxList.length; i++) {
     if (checkboxList[i].checked) {
@@ -116,7 +123,7 @@ function getBinaryValue(checkboxList) {
 
 // Met à jour dynamiquement la veuleur de l'exposant en fonction des checkbox cochées/décochées
 function updateExponent() {
-  float.encodeExponent = getBinaryValue(document.getElementsByName('exponentCheckbox'));
+  float.encodeExponent = getDecimalValue(document.getElementsByName('exponentCheckbox'));
   float.sup = float.encodeExponent - float.shift;
 
   if (float.encodeExponent == 0) {
@@ -130,7 +137,7 @@ function updateExponent() {
 
 // Met à jour dynamiquement la valeur de la mantisse en fonction des checkbox cochées/décochées
 function updateMantissa() {
-  float.encodeMantissa = getBinaryValue(document.getElementsByName('mantissaCheckbox'));
+  float.encodeMantissa = getDecimalValue(document.getElementsByName('mantissaCheckbox'));
   var hiddenBit = Math.pow(2, float.mantissaSize);
   float.valueMantissa = (float.encodeMantissa + hiddenBit) / hiddenBit;
   document.getElementById('valueMantissa').innerHTML = float.valueMantissa;
@@ -149,4 +156,44 @@ function updateDecimal() {
   } else {
     document.getElementsByName('decimal')[0].value = float.sign * Math.pow(2, float.sup) * float.valueMantissa;
   }
+}
+
+function getBinaryValue(checkboxList) {
+  var bin = "";
+  for (var i = 0; i < checkboxList.length; i++) {
+    if (checkboxList[i].checked) {
+      bin += 1;
+    } else {
+      bin += 0;
+    }
+  }
+  return bin;
+}
+
+function updateBinary() {
+  document.getElementsByName('binary')[0].value = "";
+  document.getElementsByName('binary')[0].value += float.encodeSign;
+
+  document.getElementsByName('binary')[0].value += getBinaryValue(document.getElementsByName('exponentCheckbox'));
+
+document.getElementsByName('binary')[0].value += getBinaryValue(document.getElementsByName('mantissaCheckbox'));
+
+}
+
+/**************************************************/
+/*  Mise à jour dynamique depuis valuer décimale  */
+/**************************************************/
+
+function updateFromDecimal() {
+  updateSignFromDecimal();
+}
+
+function updateSignFromDecimal() {
+  var signCheckbox = document.getElementsByName("signCheckbox")[0];
+  if (document.getElementById('dec').value[0] == "-") {
+    signCheckbox.checked = true;
+  } else {
+    signCheckbox.checked = false;
+  }
+  updateSign();
 }

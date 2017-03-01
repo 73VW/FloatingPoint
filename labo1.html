@@ -28,6 +28,10 @@
   .form p {
     display: block;
   }
+
+  #dec, #bin {
+    width: 20%;
+  }
   </style>
   <script src="labo1.js"></script>
 </head>
@@ -52,7 +56,7 @@
     </tr>
     <tr>
       <td>Binary:</td>
-      <td class="content"><input type="checkbox" name="signCheckbox" value="0" onclick="updateSign(); updateDecimal();"/></td>
+      <td class="content"><input type="checkbox" name="signCheckbox" value="0" onclick="updateSign(); updateDecimal(); updateBinary();"/></td>
       <td id="binaryExponent" class="content"></td>
       <td id="binaryMantissa" class="content"></td>
     </tr>
@@ -65,11 +69,11 @@
       </p>
       <p>
         <label for="decimal">Decimal representation </label>
-        <input type="text" name="decimal" value="0.0">
+        <input id="dec" type="text" name="decimal" value="0" oninput="updateSignFromDecimal();">
       </p>
       <p>
-        <label for="binary">Binary representation </label>
-        <input type="text" name="binary" value="0">
+        <label for="binary">Binary representation  </label>
+        <input id="bin" type="text" name="binary" value="0">
       </p>
     </div>
 </body>
