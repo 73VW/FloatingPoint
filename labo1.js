@@ -30,7 +30,7 @@ var float = {
 };
 
 /* Initialise l'application avec ses valeurs par défaut (remet tous les
- bits de l'exposant et de la mantisse à 0). Fonction appelée au chargement
+bits de l'exposant et de la mantisse à 0). Fonction appelée au chargement
 de la page/refresh. */
 function onLoad() {
   updateNbBits();
@@ -191,11 +191,13 @@ function updateBinary() {
 /*  Mise à jour dynamique depuis valeur décimale  */
 /**************************************************/
 
+// Apelé à chaque changement dans l'input pour la valeur décimal. Va mettre à jour le tableau.
 function updateFromDecimal() {
   updateSignFromDecimal();
   updateExponentFromDecimal();
 }
 
+// Met à jour la colonne Sign du tableau lors d'un  changement dans décimal.
 function updateSignFromDecimal() {
   var signCheckbox = document.getElementsByName("signCheckbox")[0];
   if (document.getElementById('dec').value[0] == "-") {
@@ -205,8 +207,40 @@ function updateSignFromDecimal() {
   }
   updateSign();
   updateBinary();
+  updateMantissaFromDecimal();
 }
 
 function updateExponentFromDecimal() {
+  var decimalValue;
+
+  if (float.encodeSign) {
+    decimalValue = document.getElementById('dec').value.substring(1);
+  } else {
+    decimalValue = document.getElementById('dec').value;
+  }
+
+  var start;
+  var checkboxList = document.getElementsByName('exponentCheckbox');
+  if (decimalValue == 0) {
+    float.encodeExponent = 0;
+    start = 0
+  } else {
+    float.encodeExponent = float.shift + Math.floor(Math.log(decimalValue) / Math.log(2));
+    start = checkboxList.length - float.encodeExponent.toString(2).length;
+  }
+
+  var j = 0;
+  for (var i = start; i < checkboxList.length; i++) {
+    if (float.encodeExponent.toString(2)[j] == 1) {
+      checkboxList[i].checked = true;
+    } else {
+      checkboxList[i].checked = false;
+    }
+    j++;
+  }
+  updateExponent();
+}
+
+function updateMantissaFromDecimal() {
 
 }
