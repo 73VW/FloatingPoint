@@ -89,6 +89,7 @@ function updateNbBits() {
   float.mantissaSize = float.nbBits - float.exponentSize - 1;
   float.shift = Math.pow(2, (float.exponentSize - 1)) - 1;
   float.sup = float.encodeExponent - float.shift;
+  updateExponent();
 
   createCheckbox("binaryExponent", "exponentCheckbox", float.exponentSize);
   createCheckbox("binaryMantissa", "mantissaCheckbox", float.mantissaSize);
@@ -192,6 +193,7 @@ function updateBinary() {
 
 function updateFromDecimal() {
   updateSignFromDecimal();
+  updateExponentFromDecimal();
 }
 
 function updateSignFromDecimal() {
@@ -202,4 +204,9 @@ function updateSignFromDecimal() {
     signCheckbox.checked = false;
   }
   updateSign();
+  updateBinary();
+}
+
+function updateExponentFromDecimal() {
+
 }
