@@ -38,6 +38,10 @@ function $(id) {
   return document.getElementById(id);
 }
 
+function $name(name) {
+  return document.getElementsByName(name);
+}
+
 /* Initialise l'application avec ses valeurs par défaut (remet tous les
 bits de l'exposant et de la mantisse à 0). Fonction appelée au chargement
 de la page/refresh. */
@@ -84,7 +88,7 @@ function createCheckbox(id, name, size) {
       };
     }
 
-  $(id).appendChild(checkbox);
+    $(id).appendChild(checkbox);
   }
 }
 
@@ -93,7 +97,7 @@ function updateNbBits() {
   clearCheckbox("binaryExponent");
   clearCheckbox("binaryMantissa");
 
-  float.nbBits = document.getElementsByName('nbBits')[0].value;
+  float.nbBits = $name('nbBits')[0].value;
   float.exponentSize = float.getExponentSize();
   float.mantissaSize = float.nbBits - float.exponentSize - 1;
   float.shift = Math.pow(2, (float.exponentSize - 1)) - 1;
@@ -107,7 +111,7 @@ function updateNbBits() {
 
 // Met à jour dynamiquement la valeur du signe quand sa checkbox est chochée/décochée
 function updateSign() {
-  let checkbox = document.getElementsByName("signCheckbox")[0];
+  let checkbox = $name("signCheckbox")[0];
 
   if (checkbox.checked) {
     float.signValue = "-1";
@@ -137,13 +141,13 @@ function getDecimalValue(checkboxList) {
 
 // Met à jour dynamiquement la valeur de l'exposant quand ses checkbox sont cochées/décochées
 function updateExponent() {
-  float.exponentEncoding = getDecimalValue(document.getElementsByName('exponentCheckbox'));
+  float.exponentEncoding = getDecimalValue($name('exponentCheckbox'));
   float.sup = float.exponentEncoding - float.shift;
 
   if (float.exponentEncoding == 0) {
-  $('exponentValue').innerHTML = "2<sup id='sup'>" + float.sup + "</sup>" + "(denormalized)";
+    $('exponentValue').innerHTML = "2<sup id='sup'>" + float.sup + "</sup>" + "(denormalized)";
   } else {
-  $('exponentValue').innerHTML = "2<sup id='sup'>" + float.sup + "</sup>";
+    $('exponentValue').innerHTML = "2<sup id='sup'>" + float.sup + "</sup>";
   }
 
   $('exponentEncoding').innerHTML = float.exponentEncoding;
@@ -151,24 +155,24 @@ function updateExponent() {
 
 // Met à jour dynamiquement la valeur de la mantisse quand ses checkbox cochées/décochées
 function updateMantissa() {
-  float.mantissaEncoding = getDecimalValue(document.getElementsByName('mantissaCheckbox'));
+  float.mantissaEncoding = getDecimalValue($name('mantissaCheckbox'));
   float.mantissaValue = (float.mantissaEncoding + float.hiddenBit) / float.hiddenBit;
-$('mantissaValue').innerHTML = float.mantissaValue;
+  $('mantissaValue').innerHTML = float.mantissaValue;
   $('mantissaEncoding').innerHTML = float.mantissaEncoding;
 }
 
 /* Met à jour dynamiquement la représentation décimale à chaque fois qu'une checkbox est modifiée */
 function updateDecimal() {
   if (float.exponentEncoding == 0 && float.mantissaEncoding == 0) {
-    document.getElementsByName('decimal')[0].value = 0;
+    $name('decimal')[0].value = 0;
   } else if (float.exponentEncoding == 0 && float.mantissaEncoding != 0) {
-    document.getElementsByName('decimal')[0].value = "denormalized";
+    $name('decimal')[0].value = "denormalized";
   } else if (float.exponentEncoding == Math.pow(2, float.exponentSize) - 1 && float.mantissaEncoding == 0) {
-    document.getElementsByName('decimal')[0].value = "infinity";
+    $name('decimal')[0].value = "infinity";
   } else if (float.exponentEncoding == Math.pow(2, float.exponentSize) - 1 && float.mantissaEncoding != 0) {
-    document.getElementsByName('decimal')[0].value = "NaN";
+    $name('decimal')[0].value = "NaN";
   } else {
-    document.getElementsByName('decimal')[0].value = float.sign * Math.pow(2, float.sup) * float.mantissaValue;
+    $name('decimal')[0].value = float.sign * Math.pow(2, float.sup) * float.mantissaValue;
   }
 }
 
@@ -188,12 +192,12 @@ function getBinaryValue(checkboxList) {
 
 /* Met à jour dynamiquement la représentation binaire à chaque fois qu'une checkbox est modifiée */
 function updateBinary() {
-  document.getElementsByName('binary')[0].value = "";
-  document.getElementsByName('binary')[0].value += float.signEncoding;
+  $name('binary')[0].value = "";
+  $name('binary')[0].value += float.signEncoding;
 
-  document.getElementsByName('binary')[0].value += getBinaryValue(document.getElementsByName('exponentCheckbox'));
+  $name('binary')[0].value += getBinaryValue($name('exponentCheckbox'));
 
-  document.getElementsByName('binary')[0].value += getBinaryValue(document.getElementsByName('mantissaCheckbox'));
+  $name('binary')[0].value += getBinaryValue($name('mantissaCheckbox'));
 }
 
 /**************************************************/
@@ -210,7 +214,7 @@ function updateFromDecimal() {
 
 // Met à jour la colonne Sign du tableau lors d'un  changement de signe dans décimal.
 function updateSignFromDecimal() {
-  let signCheckbox = document.getElementsByName("signCheckbox")[0];
+  let signCheckbox =$name("signCheckbox")[0];
   if ($('dec').value[0] == "-") {
     signCheckbox.checked = true;
   } else {
@@ -258,7 +262,7 @@ function updateCheckboxFromDecimal(checkboxList, type) {
 // Met à jour la colonne Exponent du tableau en fonction de la valeur décimale entrée
 function updateExponentFromDecimal() {
   let decimalValue = getDecimalInput();
-  let checkboxList = document.getElementsByName('exponentCheckbox');
+  let checkboxList = $name('exponentCheckbox');
 
   if (decimalValue == 0) {
     float.exponentEncoding = 0;
@@ -280,7 +284,7 @@ function updateMantissaFromDecimal() {
     float.mantissaEncoding = float.mantissaValue * float.hiddenBit - float.hiddenBit;
   }
 
-  let checkboxList = document.getElementsByName('mantissaCheckbox');
+  let checkboxList = $name('mantissaCheckbox');
   updateCheckboxFromDecimal(checkboxList, "mantissa");
   updateMantissa();
 }
