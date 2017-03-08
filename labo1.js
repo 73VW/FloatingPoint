@@ -30,9 +30,9 @@ var float = {
   sup: this.exponentEncoding - this.shift
 };
 
-/*******************************************************/
+/********************************************************/
 /*  Utilitaires : simplifications d'accès aux éléments  */
-/*******************************************************/
+/********************************************************/
 
 function $(id) {
   return document.getElementById(id);
@@ -196,7 +196,6 @@ function updateBinary() {
   $name('binary')[0].value += float.signEncoding;
 
   $name('binary')[0].value += getBinaryValue($name('exponentCheckbox'));
-
   $name('binary')[0].value += getBinaryValue($name('mantissaCheckbox'));
 }
 
@@ -212,9 +211,9 @@ function updateFromDecimal() {
   updateBinary();
 }
 
-// Met à jour la colonne Sign du tableau lors d'un  changement de signe dans décimal.
+// Met à jour la colonne Sign du tableau lors d'un  changement de signe dans decimal representation.
 function updateSignFromDecimal() {
-  let signCheckbox =$name("signCheckbox")[0];
+  let signCheckbox = $name("signCheckbox")[0];
   if ($('dec').value[0] == "-") {
     signCheckbox.checked = true;
   } else {
@@ -246,17 +245,17 @@ function updateCheckboxFromDecimal(checkboxList, type) {
 
   let j = 0;
   for (let i = 0; i < checkboxList.length; i++) {
-    if ( i >= (checkboxList.length - encode.toString(2).length)) {
-      if (encode.toString(2)[j] == 1) {
-        checkboxList[i].checked = true;
-      } else {
-        checkboxList[i].checked = false;
-      }
-      j++;
+    if ( i >= (checkboxList.length - encode.toString(2).length)) {  // S'il y a plus de checkbox que de bits, les
+    if (encode.toString(2)[j] == 1) {                             // checkbox suppélmentaires seront focément
+      checkboxList[i].checked = true;                             // décochées (valeur = 0)
     } else {
       checkboxList[i].checked = false;
     }
+    j++;
+  } else {
+    checkboxList[i].checked = false;
   }
+}
 }
 
 // Met à jour la colonne Exponent du tableau en fonction de la valeur décimale entrée
@@ -286,5 +285,50 @@ function updateMantissaFromDecimal() {
 
   let checkboxList = $name('mantissaCheckbox');
   updateCheckboxFromDecimal(checkboxList, "mantissa");
+  updateMantissa();
+}
+
+/*************************************************/
+/*  Mise à jour dynamique depuis valeur binaire  */
+/*************************************************/
+
+function updateFromBinary() {
+  updateSignFromBinary();
+  updateExponentFromBinary();
+  updateMantissaFromBinary();
+  updateDecimal();
+}
+
+// Met à jour la colonne Sign du tableau lors d'un  changement de signe dans binary representation.
+function updateSignFromBinary() {
+  let signCheckbox = $name("signCheckbox")[0];
+
+  if ($("bin").value[0] == 1) {
+    signCheckbox.checked = true;
+  } else {
+    signCheckbox.checked = false;
+  }
+
+  updateSign();
+}
+
+function updateCheckboxFromBinary(type, start, size) {
+  let checkboxList = $name(type);
+  for (let i = 0; i < size; i++) {
+    if ($('bin').value[i+start] == 1) {
+      checkboxList[i].checked = true;
+    } else {
+      checkboxList[i].checked = false;
+    }
+  }
+}
+
+function updateExponentFromBinary() {
+  updateCheckboxFromBinary("exponentCheckbox", 1, float.exponentSize)
+  updateExponent();
+}
+
+function updateMantissaFromBinary() {
+  updateCheckboxFromBinary("mantissaCheckbox", float.exponentSize+1, float.mantissaSize);
   updateMantissa();
 }
