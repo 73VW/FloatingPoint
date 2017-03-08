@@ -235,9 +235,10 @@ function getDecimalInput() {
 }
 
 // Prend une liste de checkbox ainsi que sont type (exposant ou mantisse), puis les mets à jour en fonction des valeur de la ligne "Encoded as".
-function updateCheckboxFromDecimal(checkboxList, type) {
+function updateCheckboxFromDecimal(type) {
+  let checkboxList = $name(type);
   let encode;
-  if (type == "exponent") {
+  if (type == "exponentCheckbox") {
     encode = float.exponentEncoding;
   } else {
     encode = parseInt(float.mantissaEncoding);
@@ -261,7 +262,6 @@ function updateCheckboxFromDecimal(checkboxList, type) {
 // Met à jour la colonne Exponent du tableau en fonction de la valeur décimale entrée
 function updateExponentFromDecimal() {
   let decimalValue = getDecimalInput();
-  let checkboxList = $name('exponentCheckbox');
 
   if (decimalValue == 0) {
     float.exponentEncoding = 0;
@@ -269,7 +269,7 @@ function updateExponentFromDecimal() {
     float.exponentEncoding = float.shift + Math.floor(Math.log(decimalValue) / Math.log(2));
   }
 
-  updateCheckboxFromDecimal(checkboxList, "exponent");
+  updateCheckboxFromDecimal("exponentCheckbox");
   updateExponent();
 }
 
@@ -283,8 +283,7 @@ function updateMantissaFromDecimal() {
     float.mantissaEncoding = float.mantissaValue * float.hiddenBit - float.hiddenBit;
   }
 
-  let checkboxList = $name('mantissaCheckbox');
-  updateCheckboxFromDecimal(checkboxList, "mantissa");
+  updateCheckboxFromDecimal("mantissaCheckbox");
   updateMantissa();
 }
 
