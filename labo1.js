@@ -30,6 +30,10 @@ var float = {
   sup: this.encodeExponent - this.shift
 };
 
+function $(id) {
+  return document.getElementById(id);
+}
+
 /* Initialise l'application avec ses valeurs par défaut (remet tous les
 bits de l'exposant et de la mantisse à 0). Fonction appelée au chargement
 de la page/refresh. */
@@ -48,7 +52,7 @@ function onLoad() {
 
 // Supprime toutes les checkbox de l'id donné
 function clearCheckbox(id) {
-  var checkboxList = document.getElementById(id);
+  var checkboxList = $(id);
   while (checkboxList.firstChild) {
     checkboxList.removeChild(checkboxList.firstChild);
   }
@@ -76,7 +80,7 @@ function createCheckbox(id, name, size) {
       };
     }
 
-    document.getElementById(id).appendChild(checkbox);
+  $(id).appendChild(checkbox);
   }
 }
 
@@ -111,8 +115,8 @@ function updateSign() {
 
   float.sign = -2 * float.encodeSign + 1;
 
-  document.getElementById('valueSign').innerHTML = float.valueSign;
-  document.getElementById('encodeSign').innerHTML = float.encodeSign;
+  $('valueSign').innerHTML = float.valueSign;
+  $('encodeSign').innerHTML = float.encodeSign;
 }
 
 /* Retourne une valeur décimale qui dpéend des checkbox cochées/décochées
@@ -133,20 +137,20 @@ function updateExponent() {
   float.sup = float.encodeExponent - float.shift;
 
   if (float.encodeExponent == 0) {
-    document.getElementById('valueExponent').innerHTML = "2<sup id='sup'>" + float.sup + "</sup>" + "(denormalized)";
+  $('valueExponent').innerHTML = "2<sup id='sup'>" + float.sup + "</sup>" + "(denormalized)";
   } else {
-    document.getElementById('valueExponent').innerHTML = "2<sup id='sup'>" + float.sup + "</sup>";
+  $('valueExponent').innerHTML = "2<sup id='sup'>" + float.sup + "</sup>";
   }
 
-  document.getElementById('encodeExponent').innerHTML = float.encodeExponent;
+  $('encodeExponent').innerHTML = float.encodeExponent;
 }
 
 // Met à jour dynamiquement la valeur de la mantisse quand ses checkbox cochées/décochées
 function updateMantissa() {
   float.encodeMantissa = getDecimalValue(document.getElementsByName('mantissaCheckbox'));
   float.valueMantissa = (float.encodeMantissa + float.hiddenBit) / float.hiddenBit;
-  document.getElementById('valueMantissa').innerHTML = float.valueMantissa;
-  document.getElementById('encodeMantissa').innerHTML = float.encodeMantissa;
+$('valueMantissa').innerHTML = float.valueMantissa;
+  $('encodeMantissa').innerHTML = float.encodeMantissa;
 }
 
 /* Met à jour dynamiquement la représentation décimale à chaque fois qu'une checkbox est modifiée */
@@ -203,7 +207,7 @@ function updateFromDecimal() {
 // Met à jour la colonne Sign du tableau lors d'un  changement de signe dans décimal.
 function updateSignFromDecimal() {
   var signCheckbox = document.getElementsByName("signCheckbox")[0];
-  if (document.getElementById('dec').value[0] == "-") {
+  if ($('dec').value[0] == "-") {
     signCheckbox.checked = true;
   } else {
     signCheckbox.checked = false;
@@ -216,9 +220,9 @@ function getDecimalInput() {
   var decimalValue;
 
   if (float.encodeSign) {
-    decimalValue = document.getElementById('dec').value.substring(1);
+    decimalValue = $('dec').value.substring(1);
   } else {
-    decimalValue = document.getElementById('dec').value;
+    decimalValue = $('dec').value;
   }
   return decimalValue;
 }
