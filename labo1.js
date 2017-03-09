@@ -98,6 +98,15 @@ function updateNbBits() {
   clearCheckbox("binaryMantissa");
 
   float.nbBits = $name('nbBits')[0].value;
+
+  if (float.nbBits < 12) {
+    float.nbBits = 12;
+    $name('nbBits')[0].value = 12;
+  } else if (float.nbBits > 128) {
+    float.nbBits = 128;
+    $name('nbBits')[0].value = 128;
+  }
+
   float.exponentSize = float.getExponentSize();
   float.mantissaSize = float.nbBits - float.exponentSize - 1;
   float.shift = Math.pow(2, (float.exponentSize - 1)) - 1;
