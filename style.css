@@ -8,23 +8,35 @@ body{
 	padding :0;
 	margin: 0;
 	color: white;
+	font-size: 1.8vh;
+}
+
+header{
+	color: rgb(4,147,114);
+	width: 100%;
+	background-color: white;
+	margin:0;
+	padding: 0;
 }
 
 h1{
+	margin:0;
 	font-size: 4vh;
-	color: rgb(4,147,114);
-	width: 96vw;
 	padding-top :1vh;
 	padding-bottom :1vh;
-	padding-left: 4vw;
-	background-color: white;
-	margin:0;
-    text-align: left;
+	margin-left: 4vw;
+}
+
+#main{
+	height: 100vh;
+	width: 100%;
+	margin: 0;
+	padding: 0;
 }
 
 footer{
 	color: rgb(4,147,114);
-	width: 94vw;
+	width: 92vw;
 	padding: 0;
 	padding-left: 4vw;
 	padding-right: 4vw;
@@ -32,6 +44,10 @@ footer{
 	margin:0;
 	position: fixed;
 	bottom :0;
+}
+
+h2{
+	font-size: 3vh;
 }
 
 table {
@@ -43,7 +59,7 @@ table {
 
 td, th {
     border: 1px solid white;
-    padding: 15px;
+    padding: 2vh;
 }
 
 th:first-child{
@@ -59,22 +75,23 @@ form {
 
 form label{
 	display: block;
-	width: 25vw;
+	width: 15vw;
 	border-bottom: 1px solid white;
 	border-left: 1px solid white;
     text-align: center;
     float: left;
     clear: both;
-    margin-top: 1vw;
+    margin-top: 1vh;
 }
 
 form input{
-	padding: 0.7em;
-    margin-top: 1vw;
+	padding: 0.8vh;
+    margin-top: 1vh;
     border: none;
     background-color: white;
     color: rgb(4,147,114);
-    width: 53vw;
+    width: 64vw;
+    font-size: 1.7vh;
 }
 
 .content {

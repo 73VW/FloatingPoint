@@ -7,43 +7,46 @@
   <script src="labo1.js"></script>
 </head>
 <body onload="onLoad();">
-  <h1>Labo1 - Floating Point</h1>
-  <table>
-    <th></th>
-    <th>Sign</th>
-    <th>Exponent</th>
-    <th>Mantissa</th>
-    <tr>
-      <td>Value:</td>
-      <td id="signValue" class="content"></td>
-      <td class="content"><section id="exponentValue"></td>
-      <td id="mantissaValue" class="content"></td>
-    </tr>
-    <tr>
-      <td>Encoded as:</td>
-      <td id="signEncoding" class="content"></td>
-      <td id="exponentEncoding" class="content"></td>
-      <td id="mantissaEncoding" class="content"></td>
-    </tr>
-    <tr>
-      <td>Binary:</td>
-      <td class="content"><input type="checkbox" name="signCheckbox" value="0" onclick="updateSign(); updateDecimal(); updateBinary();"/></td>
-      <td id="binaryExponent" class="content"></td>
-      <td id="binaryMantissa" class="content"></td>
-    </tr>
-  </table>
+	<header>
+  		<h1>Labo1 - Floating Point</h1>
+	</header>
+	<section id="main">
+		<table>
+		    <th></th>
+		    <th>Sign</th>
+		    <th>Exponent</th>
+		    <th>Mantissa</th>
+		    <tr>
+		      <td>Value:</td>
+		      <td id="signValue" class="content"></td>
+		      <td class="content"><section id="exponentValue"></section></td>
+		      <td id="mantissaValue" class="content"></td>
+		    </tr>
+		    <tr>
+		      <td>Encoded as:</td>
+		      <td id="signEncoding" class="content"></td>
+		      <td id="exponentEncoding" class="content"></td>
+		      <td id="mantissaEncoding" class="content"></td>
+		    </tr>
+		    <tr>
+		      <td>Binary:</td>
+		      <td class="content"><input type="checkbox" name="signCheckbox" value="0" onclick="updateSign(); updateDecimal(); updateBinary();"/></td>
+		      <td id="binaryExponent" class="content"></td>
+		      <td id="binaryMantissa" class="content"></td>
+		    </tr>
+		</table>
 
-    <form>
-        <label for="nbBits">Number of bits (&isin;[12, 128]) </label>
-        <input type="number" name="nbBits" value="32" onchange="updateNbBits();" min="12" max="128"/>
-      <br/>
-        <label for="decimal">Decimal representation </label>
-        <input id="dec" type="text" name="decimal" value="0" onchange="updateFromDecimal(); updateDecimal();">
-      <br/>
-        <label for="binary">Binary representation  </label>
-        <input id="bin" type="text" name="binary" value="0" onchange="updateFromBinary(); updateBinary();">
-    </form>
-
+		<form>
+		    <label for="nbBits">Number of bits (&isin;[12, 128]) </label>
+		    <input type="number" name="nbBits" value="32" onchange="updateNbBits();" min="12" max="128"/>
+		    <br/>
+		    <label for="decimal">Decimal representation </label>
+		    <input id="dec" type="text" name="decimal" value="0" onchange="updateFromDecimal(); updateDecimal();">
+		    <br/>
+		    <label for="binary">Binary representation  </label>
+		    <input id="bin" type="text" name="binary" value="0" onchange="updateFromBinary(); updateBinary();">
+		</form>
+	</section>
     <footer>
     	<h2>Explications</h2>
 		<p>
