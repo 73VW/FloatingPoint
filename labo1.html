@@ -3,41 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>Floating Point - Labo 1</title>
-  <style media="screen">
-  h1 {
-    margin: auto;
-    text-align: center;
-    margin-bottom: 1%;
-  }
-  table {
-    font-family: arial, sans-serif;
-    /*border-collapse: collapse;*/
-    width: 80%;
-    margin: auto;
-  }
-
-  td, th {
-    border: 1px solid #dddddd;
-    padding: 15px;
-  }
-
-  .content {
-    text-align: center;
-  }
-
-  .form {
-    padding: 1em;
-    text-align: center;
-  }
-
-  .form p {
-    display: block;
-  }
-
-  #dec, #bin {
-    width: 20%;
-  }
-  </style>
+  <link rel="stylesheet" href="style.css">
   <script src="labo1.js"></script>
 </head>
 <body onload="onLoad();">
@@ -67,19 +33,26 @@
     </tr>
   </table>
 
-    <div class="form">
-      <p>
+    <form>
         <label for="nbBits">Number of bits (&isin;[12, 128]) </label>
         <input type="number" name="nbBits" value="32" onchange="updateNbBits();" min="12" max="128"/>
-      </p>
-      <p>
+      <br/>
         <label for="decimal">Decimal representation </label>
         <input id="dec" type="text" name="decimal" value="0" onchange="updateFromDecimal(); updateDecimal();">
-      </p>
-      <p>
+      <br/>
         <label for="binary">Binary representation  </label>
         <input id="bin" type="text" name="binary" value="0" onchange="updateFromBinary(); updateBinary();">
-      </p>
-    </div>
+    </form>
+
+    <footer>
+    	<h2>Explications</h2>
+		<p>
+			Nous avons choisi de limiter à 12 bits au minimum car il n'y a déjà plus qu'un bit d'exposant, ce qui ne permet pas de coder de nombres.
+			Quant au maximum, nous avons choisis 128 bits, car le principe a été compris et qu'afficher 2000 bits surchargerait l'affichage.
+    	</p>
+    	<p>
+    		Quentin Vaucher -- Axel Rieben -- Maël Pedretti ----- Groupe B1 ----- Algo Num, HE-Arc 2017 
+    	</p>
+    </footer>
 </body>
 </html>
