@@ -30,7 +30,7 @@
 		    </tr>
 		    <tr>
 		      <td>Binary:</td>
-		      <td class="content"><input type="checkbox" name="signCheckbox" value="0" onclick="updateSign(); updateDecimal(); updateBinary();"/></td>
+		      <td class="content"><input type="checkbox" name="signCheckbox" value="0" onclick="updateSign(); updateDecimal(); updateBinary(this);"/></td>
 		      <td id="binaryExponent" class="content"></td>
 		      <td id="binaryMantissa" class="content"></td>
 		    </tr>
@@ -41,15 +41,18 @@
 		    <input type="number" name="nbBits" value="32" onchange="updateNbBits();" min="12" max="128"/>
 		    <br/>
 		    <label for="decimal">Decimal representation </label>
-		    <input id="dec" type="text" name="decimal" value="0" onchange="updateFromDecimal(); updateDecimal();">
+		    <input id="dec" type="text" name="decimal" value="0" onchange="updateFromDecimal(this); updateDecimal();">
 		    <br/>
 		    <label for="binary">Binary representation  </label>
-		    <input id="bin" type="text" name="binary" value="0" onchange="updateFromBinary(); updateBinary();">
+		    <input id="bin" type="text" name="binary" value="0" onchange="updateFromBinary(this); updateBinary(this);">
 		</form>
 
     <form>
-      <label for="numberToAdd">Number to add </label>
-      <input id="decToAdd" type="text" name="numberToAdd" value="0" onchange="">
+      <label for="floatToAdd">Decimal value to add </label>
+      <input id="decToAdd" type="text" name="floatToAdd" value="0" onchange="updateFloatToAddFromDecimal(this);">
+      <br/>
+      <label for="floatToAddBin">Binary value to add </label>
+      <input id="binToAdd" type="text" name="floatToAddBin" value="0" onchange="updateFloatToAddFromBinary(this);">
       <br/>
       <label for="result">Result </label>
       <input id="res" type="text" name="result" value="0">

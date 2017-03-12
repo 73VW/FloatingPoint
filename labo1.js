@@ -1,17 +1,17 @@
 /* Objet float qui contient toutes les valeurs nécessaire aux
 différents calcul durant l'execution du programme. l'objet est créé avec
 des valeurs par défaut, à savoir tous les bits à 0, encodé sur 32 bits.*/
-var float = {
-  nbBits: 32,
+var Float = function() {
+  this.nbBits = 32;
 
-  signValue: "+1",
-  signEncoding: 0,
-  sign: -2 * this.signEncoding + 1,
+  this.signValue = "+1";
+  this.signEncoding = 0;
+  this.sign = -2 * this.signEncoding + 1;
 
-  exponentValue: -127,
-  exponentEncoding: 0,
-  exponentSize: 8,
-  getExponentSize: function() {
+  this.exponentValue = -127;
+  this.exponentEncoding = 0;
+  this.exponentSize = 8;
+  this.getExponentSize = function() {
     // Cf. page wiki anglaise de la norme IEEE754, section "interchange formats"
     if (this.nbBits == 16) {
       return 5;
@@ -21,14 +21,38 @@ var float = {
     return Math.round(4 * Math.log(this.nbBits) / Math.log(2) - 13);
   },
 
-  mantissaValue: 1,
-  mantissaEncoding: 0,
-  mantissaSize: 23,
-  hiddenBit: Math.pow(2, this.mantissaSize),
+  this.mantissaValue = 1;
+  this.mantissaEncoding = 0;
+  this.mantissaSize = 23;
+  this.hiddenBit = Math.pow(2, this.mantissaSize);
 
-  shift: Math.pow(2, (this.exponentSize - 1)) - 1,
-  sup: this.exponentEncoding - this.shift
+  this.shift = Math.pow(2, (this.exponentSize - 1)) - 1;
+  this.sup = this.exponentEncoding - this.shift;
 };
+
+var float = new Float();
+var float1 = new Float();
+var float2 = new Float();
+
+function copyFloat(floatCopy) {
+  floatCopy.nbBits = float.nbBits;
+
+  floatCopy.signValue = float.signValue;
+  floatCopy.signEncoding = float.signEncoding;
+  floatCopy.sign = float.sign;
+
+  floatCopy.exponentValue = float.exponentValue;
+  floatCopy.exponentEncoding = float.exponentEncoding;
+  floatCopy.exponentSize = float.exponentSize;
+
+  floatCopy.mantissaValue = float.mantissaValue;
+  floatCopy.mantissaEncoding = float.mantissaEncoding;
+  floatCopy.mantissaSize = float.mantissaSize;
+  floatCopy.hiddenBit = float.hiddenBit;
+
+  floatCopy.shift = float.shift;
+  floatCopy.sup = float.sup;
+}
 
 /********************************************************/
 /*  Utilitaires : simplifications d'accès aux éléments  */
@@ -51,7 +75,7 @@ function onLoad() {
   updateExponent();
   updateMantissa();
   updateDecimal();
-  updateBinary();
+  updateBinary($name('binary')[0]);
 }
 
 /**************************************************/
@@ -78,13 +102,13 @@ function createCheckbox(id, name, size) {
       checkbox.onclick = function() {
         updateExponent();
         updateDecimal();
-        updateBinary();
+        updateBinary($name('binary')[0]);
       };
     } else {
       checkbox.onclick = function() {
         updateMantissa();
         updateDecimal();
-        updateBinary();
+        updateBinary($name('binary')[0]);
       };
     }
 
@@ -115,7 +139,7 @@ function updateNbBits() {
   updateExponent();
   updateMantissa();
   updateDecimal();
-  updateBinary();
+  updateBinary($name('binary')[0]);
   createCheckbox("binaryExponent", "exponentCheckbox", float.exponentSize);
   createCheckbox("binaryMantissa", "mantissaCheckbox", float.mantissaSize);
 }
@@ -170,6 +194,7 @@ function updateMantissa() {
   float.mantissaValue = (float.mantissaEncoding + float.hiddenBit) / float.hiddenBit;
   $('mantissaValue').innerHTML = float.mantissaValue;
   $('mantissaEncoding').innerHTML = float.mantissaEncoding;
+  copyFloat(float1); // sauve l'état du float
 }
 
 /* Met à jour dynamiquement la représentation décimale à chaque fois qu'une checkbox est modifiée */
@@ -183,7 +208,7 @@ function updateDecimal() {
   } else if (float.exponentEncoding == Math.pow(2, float.exponentSize) - 1 && float.mantissaEncoding != 0) {
     $name('decimal')[0].value = "NaN";
   } else {
-    $name('decimal')[0].value = float.sign * Math.pow(2, float.sup) * float.mantissaValue;
+    $name('decimal')[0].value = float.sign * Math.pow(2, float.sup) * (float.mantissaEncoding + float.hiddenBit) / float.hiddenBit;
   }
 }
 
@@ -201,13 +226,13 @@ function getBinaryValue(checkboxList) {
   return bin;
 }
 
-/* Met à jour dynamiquement la représentation binaire à chaque fois qu'une checkbox est modifiée */
-function updateBinary() {
-  $name('binary')[0].value = "";
-  $name('binary')[0].value += float.signEncoding;
+/* Met à jour dynamiquement la représentation binaire spécifiée à chaque fois qu'une checkbox est modifiée */
+function updateBinary(input) {
+  input.value = "";
+  input.value += float.signEncoding;
 
-  $name('binary')[0].value += getBinaryValue($name('exponentCheckbox'));
-  $name('binary')[0].value += getBinaryValue($name('mantissaCheckbox'));
+  input.value += getBinaryValue($name('exponentCheckbox'));
+  input.value += getBinaryValue($name('mantissaCheckbox'));
 }
 
 /**************************************************/
@@ -215,17 +240,18 @@ function updateBinary() {
 /**************************************************/
 
 // Apelé à chaque changement dans l'input pour la valeur décimal. Va mettre à jour le tableau.
-function updateFromDecimal() {
-  updateSignFromDecimal();
-  updateExponentFromDecimal();
-  updateMantissaFromDecimal();
-  updateBinary();
+function updateFromDecimal(input) {
+  updateSignFromDecimal(input);
+  updateExponentFromDecimal(input);
+  updateMantissaFromDecimal(input);
+  updateBinary($name('binary')[0]);
+  copyFloat(float1);
 }
 
 // Met à jour la colonne Sign du tableau lors d'un  changement de signe dans decimal representation.
-function updateSignFromDecimal() {
+function updateSignFromDecimal(input) {
   let signCheckbox = $name("signCheckbox")[0];
-  if ($('dec').value[0] == "-") {
+  if (input.value[0] == "-") {
     signCheckbox.checked = true;
   } else {
     signCheckbox.checked = false;
@@ -234,13 +260,13 @@ function updateSignFromDecimal() {
 }
 
 // Retourne la valeur décimale entrée, sans prendre compte du signe
-function getDecimalInput() {
+function getDecimalInput(input) {
   let decimalValue;
 
   if (float.signEncoding) {
-    decimalValue = $('dec').value.substring(1);
+    decimalValue = input.value.substring(1);
   } else {
-    decimalValue = $('dec').value;
+    decimalValue = input.value;
   }
   return decimalValue;
 }
@@ -271,8 +297,8 @@ function updateCheckboxFromDecimal(type) {
 }
 
 // Met à jour la colonne Exponent du tableau en fonction de la valeur décimale entrée
-function updateExponentFromDecimal() {
-  let decimalValue = getDecimalInput();
+function updateExponentFromDecimal(input) {
+  let decimalValue = getDecimalInput(input);
 
   if (decimalValue == 0) {
     float.exponentEncoding = 0;
@@ -285,8 +311,8 @@ function updateExponentFromDecimal() {
 }
 
 // Met à jour la colonne Mantissa du tableau en fonction de la valeur décimale entrée
-function updateMantissaFromDecimal() {
-  float.mantissaValue = getDecimalInput() / Math.pow(2, float.sup);
+function updateMantissaFromDecimal(input) {
+  float.mantissaValue = getDecimalInput(input) / Math.pow(2, float.sup);
   if (float.mantissaValue <= 0) {
     float.mantissaValue = 1;
     float.mantissaEncoding = 0;
@@ -302,18 +328,18 @@ function updateMantissaFromDecimal() {
 /*  Mise à jour dynamique depuis valeur binaire  */
 /*************************************************/
 
-function updateFromBinary() {
-  updateSignFromBinary();
-  updateExponentFromBinary();
-  updateMantissaFromBinary();
+function updateFromBinary(input) {
+  updateSignFromBinary(input);
+  updateExponentFromBinary(input);
+  updateMantissaFromBinary(input);
   updateDecimal();
 }
 
 // Met à jour la colonne Sign du tableau lors d'un  changement de signe dans binary representation.
-function updateSignFromBinary() {
+function updateSignFromBinary(input) {
   let signCheckbox = $name("signCheckbox")[0];
 
-  if ($("bin").value[0] == 1) {
+  if (input.value[0] == 1) {
     signCheckbox.checked = true;
   } else {
     signCheckbox.checked = false;
@@ -322,10 +348,10 @@ function updateSignFromBinary() {
   updateSign();
 }
 
-function updateCheckboxFromBinary(type, start, size) {
+function updateCheckboxFromBinary(input, type, start, size) {
   let checkboxList = $name(type);
   for (let i = 0; i < size; i++) {
-    if ($('bin').value[i+start] == 1) {
+    if (input.value[i+start] == 1) {
       checkboxList[i].checked = true;
     } else {
       checkboxList[i].checked = false;
@@ -333,16 +359,55 @@ function updateCheckboxFromBinary(type, start, size) {
   }
 }
 
-function updateExponentFromBinary() {
-  updateCheckboxFromBinary("exponentCheckbox", 1, float.exponentSize)
+function updateExponentFromBinary(input) {
+  updateCheckboxFromBinary(input, "exponentCheckbox", 1, float.exponentSize)
   updateExponent();
 }
 
-function updateMantissaFromBinary() {
-  updateCheckboxFromBinary("mantissaCheckbox", float.exponentSize+1, float.mantissaSize);
+function updateMantissaFromBinary(input) {
+  updateCheckboxFromBinary(input, "mantissaCheckbox", float.exponentSize+1, float.mantissaSize);
   updateMantissa();
 }
 
 /**************/
 /*  Addition  */
 /**************/
+
+function updateFloatToAddFromDecimal(input) {
+  // Construction du deuxième float
+  updateSignFromDecimal(input);
+  updateExponentFromDecimal(input);
+  updateMantissaFromDecimal(input);
+  copyFloat(float2);
+  updateBinary($('binToAdd'));
+
+  updateFromDecimal($('dec')); // Pour que l'utilisateur ne voit pas que le tableau change.. :p
+
+  addition();
+}
+
+function updateFloatToAddFromBinary(input) {
+  // Construction du deuxième float
+  updateSignFromBinary(input);
+  updateExponentFromBinary(input);
+  updateMantissaFromBinary(input);
+  copyFloat(float2);
+
+  updateFromBinary($('bin'));
+  addition();
+}
+
+function addition() {
+  if (float1.sup > float2.sup) {
+    floatMax = float1;
+    floatMin = float2;
+  } else {
+    floatMax = float2;
+    floatMin = float1;
+  }
+
+  floatMin.mantissaValue = floatMin.mantissaValue / Math.pow(2, (floatMax.sup - floatMin.sup));
+  floatMin.sup += (floatMax.sup - floatMin.sup);
+
+  $('res').value = Math.pow(2, floatMax.sup) * (floatMax.mantissaValue + floatMin.mantissaValue);
+}
