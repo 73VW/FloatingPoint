@@ -113,7 +113,9 @@ function updateNbBits() {
   float.sup = float.exponentEncoding - float.shift;
   float.hiddenBit = Math.pow(2, float.mantissaSize);
   updateExponent();
-
+  updateMantissa();
+  updateDecimal();
+  updateBinary();
   createCheckbox("binaryExponent", "exponentCheckbox", float.exponentSize);
   createCheckbox("binaryMantissa", "mantissaCheckbox", float.mantissaSize);
 }
