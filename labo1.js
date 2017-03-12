@@ -74,7 +74,7 @@ function onLoad() {
   updateSign();
   updateExponent();
   updateMantissa();
-  updateDecimal();
+  updateDecimal($name('decimal')[0]);
   updateBinary($name('binary')[0]);
 }
 
@@ -101,13 +101,13 @@ function createCheckbox(id, name, size) {
     if (name == "exponentCheckbox") {
       checkbox.onclick = function() {
         updateExponent();
-        updateDecimal();
+        updateDecimal($name('decimal')[0]);
         updateBinary($name('binary')[0]);
       };
     } else {
       checkbox.onclick = function() {
         updateMantissa();
-        updateDecimal();
+        updateDecimal($name('decimal')[0]);
         updateBinary($name('binary')[0]);
       };
     }
@@ -138,7 +138,7 @@ function updateNbBits() {
   float.hiddenBit = Math.pow(2, float.mantissaSize);
   updateExponent();
   updateMantissa();
-  updateDecimal();
+  updateDecimal($name('decimal')[0]);
   updateBinary($name('binary')[0]);
   createCheckbox("binaryExponent", "exponentCheckbox", float.exponentSize);
   createCheckbox("binaryMantissa", "mantissaCheckbox", float.mantissaSize);
@@ -198,17 +198,17 @@ function updateMantissa() {
 }
 
 /* Met à jour dynamiquement la représentation décimale à chaque fois qu'une checkbox est modifiée */
-function updateDecimal() {
+function updateDecimal(input) {
   if (float.exponentEncoding == 0 && float.mantissaEncoding == 0) {
-    $name('decimal')[0].value = 0;
+    input.value = 0;
   } else if (float.exponentEncoding == 0 && float.mantissaEncoding != 0) {
-    $name('decimal')[0].value = "denormalized";
+    input.value = "denormalized";
   } else if (float.exponentEncoding == Math.pow(2, float.exponentSize) - 1 && float.mantissaEncoding == 0) {
-    $name('decimal')[0].value = "infinity";
+    input.value = "infinity";
   } else if (float.exponentEncoding == Math.pow(2, float.exponentSize) - 1 && float.mantissaEncoding != 0) {
-    $name('decimal')[0].value = "NaN";
+    input.value = "NaN";
   } else {
-    $name('decimal')[0].value = float.sign * Math.pow(2, float.sup) * (float.mantissaEncoding + float.hiddenBit) / float.hiddenBit;
+    input.value = float.sign * Math.pow(2, float.sup) * (float.mantissaEncoding + float.hiddenBit) / float.hiddenBit;
   }
 }
 
@@ -332,7 +332,7 @@ function updateFromBinary(input) {
   updateSignFromBinary(input);
   updateExponentFromBinary(input);
   updateMantissaFromBinary(input);
-  updateDecimal();
+  updateDecimal($name('decimal')[0]);
 }
 
 // Met à jour la colonne Sign du tableau lors d'un  changement de signe dans binary representation.
@@ -378,8 +378,9 @@ function updateFloatToAddFromDecimal(input) {
   updateSignFromDecimal(input);
   updateExponentFromDecimal(input);
   updateMantissaFromDecimal(input);
-  copyFloat(float2);
   updateBinary($('binToAdd'));
+  updateDecimal($('decToAdd'));
+  copyFloat(float2);
 
   updateFromDecimal($('dec')); // Pour que l'utilisateur ne voit pas que le tableau change.. :p
 
@@ -391,6 +392,8 @@ function updateFloatToAddFromBinary(input) {
   updateSignFromBinary(input);
   updateExponentFromBinary(input);
   updateMantissaFromBinary(input);
+  updateDecimal($('decToAdd'));
+  updateBinary($('binToAdd'));
   copyFloat(float2);
 
   updateFromBinary($('bin'));

@@ -30,7 +30,7 @@
 		    </tr>
 		    <tr>
 		      <td>Binary:</td>
-		      <td class="content"><input type="checkbox" name="signCheckbox" value="0" onclick="updateSign(); updateDecimal(); updateBinary(this);"/></td>
+		      <td class="content"><input type="checkbox" name="signCheckbox" value="0" onclick="updateSign(); updateDecimal($name('decimal')[0]); updateBinary($name('binary')[0]);"/></td>
 		      <td id="binaryExponent" class="content"></td>
 		      <td id="binaryMantissa" class="content"></td>
 		    </tr>
@@ -41,7 +41,7 @@
 		    <input type="number" name="nbBits" value="32" onchange="updateNbBits();" min="12" max="128"/>
 		    <br/>
 		    <label for="decimal">Decimal representation </label>
-		    <input id="dec" type="text" name="decimal" value="0" onchange="updateFromDecimal(this); updateDecimal();">
+		    <input id="dec" type="text" name="decimal" value="0" onchange="updateFromDecimal(this); updateDecimal(this);">
 		    <br/>
 		    <label for="binary">Binary representation  </label>
 		    <input id="bin" type="text" name="binary" value="0" onchange="updateFromBinary(this); updateBinary(this);">
