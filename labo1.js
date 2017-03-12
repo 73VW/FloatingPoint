@@ -373,6 +373,7 @@ function updateMantissaFromBinary(input) {
 /*  Addition  */
 /**************/
 
+// Met à jour le deuxième float à l'aide de la valeur décimale et appel l'addition
 function updateFloatToAddFromDecimal(input) {
   // Construction du deuxième float
   updateSignFromDecimal(input);
@@ -387,6 +388,7 @@ function updateFloatToAddFromDecimal(input) {
   addition();
 }
 
+// Met à jout le deuxième float à l'aide de la valeur binaire et appel l'addition
 function updateFloatToAddFromBinary(input) {
   // Construction du deuxième float
   updateSignFromBinary(input);
@@ -400,6 +402,7 @@ function updateFloatToAddFromBinary(input) {
   addition();
 }
 
+// Additionne les deux floats et affiche le résultat
 function addition() {
   if (float1.sup > float2.sup) {
     floatMax = float1;
@@ -409,6 +412,7 @@ function addition() {
     floatMin = float1;
   }
 
+  // Cf. page anglaise wiki "Floating-point arithmetic" section 5.1 "addition and substraction".
   floatMin.mantissaValue = floatMin.mantissaValue / Math.pow(2, (floatMax.sup - floatMin.sup));
   floatMin.sup += (floatMax.sup - floatMin.sup);
 
