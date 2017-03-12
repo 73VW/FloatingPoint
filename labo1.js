@@ -194,7 +194,6 @@ function updateMantissa() {
   float.mantissaValue = (float.mantissaEncoding + float.hiddenBit) / float.hiddenBit;
   $('mantissaValue').innerHTML = float.mantissaValue;
   $('mantissaEncoding').innerHTML = float.mantissaEncoding;
-  copyFloat(float1); // sauve l'état du float
 }
 
 /* Met à jour dynamiquement la représentation décimale à chaque fois qu'une checkbox est modifiée */
@@ -233,6 +232,7 @@ function updateBinary(input) {
 
   input.value += getBinaryValue($name('exponentCheckbox'));
   input.value += getBinaryValue($name('mantissaCheckbox'));
+  copyFloat(float1); // sauve l'état du float (c'est fonction est appelée à chaque changement)
 }
 
 /**************************************************/
@@ -402,7 +402,7 @@ function updateFloatToAddFromBinary(input) {
   addition();
 }
 
-// Additionne les deux floats et affiche le résultat
+// Additionne les deux floats et affiche le résultat. L'addition ne tient pas compte du signe (ne fait pas de soustraction..)
 function addition() {
   if (float1.sup > float2.sup) {
     floatMax = float1;
