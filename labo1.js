@@ -340,3 +340,7 @@ function updateMantissaFromBinary() {
   updateCheckboxFromBinary("mantissaCheckbox", float.exponentSize+1, float.mantissaSize);
   updateMantissa();
 }
+
+/**************/
+/*  Addition  */
+/**************/
