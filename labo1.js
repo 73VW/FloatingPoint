@@ -398,7 +398,7 @@ function updateFloatToAddFromBinary(input) {
   updateBinary($('binToAdd'));
   copyFloat(float2);
 
-  updateFromBinary($('bin'));
+  updateFromDecimal($('dec'));
   addition();
 }
 
