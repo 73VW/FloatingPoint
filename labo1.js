@@ -8,7 +8,7 @@ var Float = function() {
   this.signEncoding = 0;
   this.sign = -2 * this.signEncoding + 1;
 
-  this.exponentValue = -127;
+  //this.exponentValue = -127;
   this.exponentEncoding = 0;
   this.exponentSize = 8;
   this.getExponentSize = function() {
@@ -235,6 +235,11 @@ function updateBinary(input) {
   copyFloat(float1); // sauve l'état du float (c'est fonction est appelée à chaque changement)
 }
 
+
+
+
+
+
 /**************************************************/
 /*  Mise à jour dynamique depuis valeur décimale  */
 /**************************************************/
@@ -369,6 +374,12 @@ function updateMantissaFromBinary(input) {
   updateMantissa();
 }
 
+
+
+
+
+
+
 /**************/
 /*  Addition  */
 /**************/
@@ -402,19 +413,33 @@ function updateFloatToAddFromBinary(input) {
   addition();
 }
 
-// Additionne les deux floats et affiche le résultat. L'addition ne tient pas compte du signe (ne fait pas de soustraction..)
-function addition() {
-  if (float1.sup > float2.sup) {
-    floatMax = float1;
-    floatMin = float2;
-  } else {
-    floatMax = float2;
-    floatMin = float1;
+function addition()
+{
+
+	if(float1.exponentEncoding*float1.sign > float2.exponentEncoding*float2.sign){
+	    floatMax = float1;
+	    floatMin = float2;
   }
+	else {
+    floatMax = float2;
+	  floatMin = float1;
+	}
 
-  // Cf. page anglaise wiki "Floating-point arithmetic" section 5.1 "addition and substraction".
-  floatMin.mantissaValue = floatMin.mantissaValue / Math.pow(2, (floatMax.sup - floatMin.sup));
-  floatMin.sup += (floatMax.sup - floatMin.sup);
+	//on shifte autant de fois qu'il faut la mantisse et ensuite on met à jour l'exposant
+	floatMin.mantissaEncoding = (floatMin.mantissaEncoding + floatMin.hiddenBit) / Math.pow(2, (floatMax.exponentEncoding-floatMin.exponentEncoding));
+	floatMin.exponentEncoding = floatMax.exponentEncoding;
+	//on additionne les mantisses via la valeur calculée en binaire
+	   
+  //si les nombres n'ont pas le même signe, on fait la différence entre le plus grand et le plus petit,
+  //sinon on les additionne
+  if(floatMin.signEncoding!=floatMax.signEncoding)
+    floatMin.mantissaEncoding = floatMax.mantissaEncoding-floatMin.mantissaEncoding;
+  else
+    floatMin.mantissaEncoding += floatMax.mantissaEncoding;
 
-  $('res').value = Math.pow(2, floatMax.sup) * (floatMax.mantissaValue + floatMin.mantissaValue);
+
+  //on recalcule la valeur réelle de la mantisse
+  floatMin.mantissaValue = (floatMin.mantissaEncoding + floatMin.hiddenBit) / floatMin.hiddenBit;
+  floatMin.sup = floatMin.exponentEncoding - floatMin.shift;
+  $('res').value = Math.pow(2, floatMin.sup) * floatMin.mantissaValue;
 }
