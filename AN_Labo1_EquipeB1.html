@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Floating Point - Labo 1</title>
+  <title>AN_Labo1_EquipeB1</title>
   <link rel="stylesheet" href="style.css">
-  <script src="labo1.js"></script>
+  <script src="AN_Labo1_EquipeB1.js"></script>
 </head>
 <body onload="onLoad();">
 	<header>
@@ -46,8 +46,11 @@
 		    <label for="binary">Binary representation  </label>
 		    <input id="bin" type="text" name="binary" value="0" onchange="updateFromBinary(this); updateBinary(this);">
 		</form>
-
 	    <form>
+	    	<label for="operationAdd">Add</label>
+	    	<input type="radio" id="operationAdd" name="operation" value="+" checked="checked"><br/>
+	    	<label for="operationSub">Sub</label>
+	    	<input id="operationSub" type="radio" name="operation" value="-"><br/><br/>
 	      <label for="floatToAdd">Decimal value to add or substract</label>
 	      <input id="decToAdd" type="text" name="floatToAdd" value="0" onchange="updateFloatToAddFromDecimal(this);">
 	      <br/>
@@ -55,7 +58,10 @@
 	      <input id="binToAdd" type="text" name="floatToAddBin" value="0" onchange="updateFloatToAddFromBinary(this);">
 	      <br/>
 	      <label for="result">Decimal result </label>
-	      <input id="res" type="text" name="result" value="0">
+	      <input id="result" type="text" name="result" value="0">
+	      <br/>
+	      <label for="resultBin">Binary result </label>
+	      <input id="resultBin" type="text" name="resultBin" value="0">
 	    </form>
 	</section>
     <footer>

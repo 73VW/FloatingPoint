@@ -100,3 +100,11 @@ form input{
 .content {
     text-align: center;
 }
+
+#operationAdd, #operationSub{
+	margin-left: -30vw;
+}
+
+#operationSub{
+	margin-top: 2vh;
+}

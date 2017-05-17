@@ -430,16 +430,30 @@ function addition()
 	floatMin.exponentEncoding = floatMax.exponentEncoding;
 	//on additionne les mantisses via la valeur calculée en binaire
 	   
-  //si les nombres n'ont pas le même signe, on fait la différence entre le plus grand et le plus petit,
-  //sinon on les additionne
-  if(floatMin.signEncoding!=floatMax.signEncoding)
-    floatMin.mantissaEncoding = floatMax.mantissaEncoding-floatMin.mantissaEncoding;
-  else
-    floatMin.mantissaEncoding += floatMax.mantissaEncoding;
+  if($('operationAdd').checked){
+    floatMin.mantissaEncoding = floatMax.mantissaEncoding*floatMax.sign + floatMin.mantissaEncoding*floatMin.sign;
+  }
+  else{
+    floatMin.mantissaEncoding = floatMax.mantissaEncoding*floatMax.sign - floatMin.mantissaEncoding*floatMin.sign;
+  }
 
-
+  if(floatMin.mantissaEncoding<0&&floatMin.signEncoding==floatMax.signEncoding){
+    floatMin.signEncoding=1;
+    floatMin.sign=-1;
+  }
+  else{
+    floatMin.signEncoding=0;
+    floatMin.sign=1;
+  }
   //on recalcule la valeur réelle de la mantisse
   floatMin.mantissaValue = (floatMin.mantissaEncoding + floatMin.hiddenBit) / floatMin.hiddenBit;
   floatMin.sup = floatMin.exponentEncoding - floatMin.shift;
-  $('res').value = Math.pow(2, floatMin.sup) * floatMin.mantissaValue;
+  $('result').value = Math.pow(2, floatMin.sup) * floatMin.mantissaValue*floatMin.sign;
+
+  updateSignFromDecimal($('result'));
+  updateExponentFromDecimal($('result'));
+  updateMantissaFromDecimal($('result'));
+  updateBinary($('resultBin'));
+
+  updateFromDecimal($('dec')); // Pour que l'utilisateur ne voit pas que le tableau change.. :p
 }
